@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/providers/data_provider.dart';
 import 'package:flutter_workshop/utils/routes.dart';
-import 'package:flutter_workshop/views/main_page.dart';
-
-import 'views/edit_page.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => DataProvider(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
