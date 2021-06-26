@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/providers/data_provider.dart';
 import 'package:flutter_workshop/utils/utils.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:provider/provider.dart';
 
 class EditPage extends StatefulWidget {
   @override
@@ -15,17 +17,22 @@ class _EditPageState extends State<EditPage> {
   void initState() {
     super.initState();
 
-    dataMap = new Map();
-    dataMap.putIfAbsent("Flutter", () => 5);
-    dataMap.putIfAbsent("React", () => 3);
-    dataMap.putIfAbsent("Xamarin", () => 2);
-    dataMap.putIfAbsent("Ionic", () => 2);
+    dataMap = Provider.of<DataProvider>(context, listen: false).dataMap;
   }
 
   @override
   Widget build(BuildContext context) {
     var appBar = AppBar(
       title: Text('Edit Page'),
+      actions: [
+        FlatButton(
+          child: Text("Save"),
+          onPressed: () {
+            Provider.of<DataProvider>(context, listen: false).dataMap = dataMap;
+            Navigator.of(context).pop();
+          },
+        )
+      ],
     );
     return Scaffold(
       appBar: appBar,

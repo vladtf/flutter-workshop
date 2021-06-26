@@ -1,18 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/providers/data_provider.dart';
 import 'package:flutter_workshop/utils/routes.dart';
-import 'package:flutter_workshop/utils/utils.dart';
-import 'package:flutter_workshop/views/edit_page.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Map<String, double> dataMap = new Map();
-    dataMap.putIfAbsent("Flutter", () => 5);
-    dataMap.putIfAbsent("React", () => 3);
-    dataMap.putIfAbsent("Xamarin", () => 2);
-    dataMap.putIfAbsent("Ionic", () => 2);
+    Map<String, double> dataMap = Provider.of<DataProvider>(context).dataMap;
 
     return Scaffold(
       appBar: AppBar(
@@ -20,8 +16,7 @@ class MainPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () =>
-                Navigator.of(context).pushNamed(Routes.editPage()),
+            onPressed: () => Navigator.of(context).pushNamed(Routes.editPage()),
           )
         ],
       ),
