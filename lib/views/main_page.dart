@@ -1,42 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_workshop/utils/routes.dart';
+import 'package:flutter_workshop/utils/utils.dart';
+import 'package:flutter_workshop/views/edit_page.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class MainPage extends StatelessWidget {
-  Map<String, double> dataMap = {
-    "Flutter": 5,
-    "React": 3,
-    "Xamarin": 2,
-    "Ionic": 2,
-  };
-
   @override
   Widget build(BuildContext context) {
-    var appBar = AppBar(
-      title: Text('A meaningful title'),
-    );
+    Map<String, double> dataMap = new Map();
+    dataMap.putIfAbsent("Flutter", () => 5);
+    dataMap.putIfAbsent("React", () => 3);
+    dataMap.putIfAbsent("Xamarin", () => 2);
+    dataMap.putIfAbsent("Ionic", () => 2);
+
     return Scaffold(
-      appBar: appBar,
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Card(
-                child: PieChart(dataMap: dataMap),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Card(
-                child: Container(
-                  color: Colors.blueAccent,
-                ),
-              ),
-            )
-          ],
-        ),
+      appBar: AppBar(
+        title: Text('View chart'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(Routes.editPage()),
+          )
+        ],
+      ),
+      body: PieChart(
+        dataMap: dataMap,
+        legendPosition: LegendPosition.bottom,
       ),
     );
   }
