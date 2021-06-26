@@ -15,7 +15,7 @@ import 'package:flutter_workshop/views/main_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Test existing widgets', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(ChangeNotifierProvider(
       create: (context) => DataProvider(),
@@ -27,7 +27,16 @@ void main() {
     expect(find.text('React'), findsOneWidget);
     expect(find.text('Xamarin'), findsOneWidget);
     expect(find.text('Ionic'), findsOneWidget);
+  });
 
+  testWidgets('Test navigation', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(ChangeNotifierProvider(
+      create: (context) => DataProvider(),
+      child: MyApp(),
+    ));
+
+    // Test navigation
     expect(find.byType(MainPage), findsOneWidget);
     expect(find.byType(EditPage), findsNothing);
 
@@ -42,5 +51,39 @@ void main() {
 
     expect(find.byType(MainPage), findsOneWidget);
     expect(find.byType(EditPage), findsNothing);
+  });
+
+  testWidgets('Test edit', (WidgetTester tester) async {
+    DataProvider provider = DataProvider();
+    Map<String, double> dataMap = provider.dataMap;
+
+    // Test initial data
+    expect(dataMap['Flutter'], equals(5));
+    expect(dataMap['React'], equals(3));
+    expect(dataMap['Xamarin'], equals(2));
+    expect(dataMap['Ionic'], equals(2));
+
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(ChangeNotifierProvider(
+      create: (context) => provider,
+      child: MyApp(),
+    ));
+
+    await tester.tap(find.byIcon(Icons.edit));
+    await tester.pumpAndSettle();
+
+    var flutterValueField = find.widgetWithText(TextFormField, "5.0");
+
+    var newValue = "10";
+
+    await tester.enterText(flutterValueField, newValue);
+
+    await tester.tap(find.text("Save"));
+    await tester.pumpAndSettle();
+
+    expect(dataMap['Flutter'], equals(double.parse(newValue)));
+    expect(dataMap['React'], equals(3));
+    expect(dataMap['Xamarin'], equals(2));
+    expect(dataMap['Ionic'], equals(2));
   });
 }
