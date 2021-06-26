@@ -9,22 +9,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_workshop/main.dart';
+import 'package:flutter_workshop/providers/data_provider.dart';
+import 'package:flutter_workshop/views/edit_page.dart';
+import 'package:flutter_workshop/views/main_page.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(ChangeNotifierProvider(
+      create: (context) => DataProvider(),
+      child: MyApp(),
+    ));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify pie chart data
+    expect(find.text('Flutter'), findsOneWidget);
+    expect(find.text('React'), findsOneWidget);
+    expect(find.text('Xamarin'), findsOneWidget);
+    expect(find.text('Ionic'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(find.byType(MainPage), findsOneWidget);
+    expect(find.byType(EditPage), findsNothing);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.edit));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MainPage), findsNothing);
+    expect(find.byType(EditPage), findsOneWidget);
+
+    await tester.tap(find.text("Save"));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MainPage), findsOneWidget);
+    expect(find.byType(EditPage), findsNothing);
   });
 }
