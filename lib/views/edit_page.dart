@@ -25,7 +25,7 @@ class _EditPageState extends State<EditPage> {
     var appBar = AppBar(
       title: Text('Edit Page'),
       actions: [
-        FlatButton(
+        TextButton(
           child: Text("Save"),
           onPressed: () {
             Provider.of<DataProvider>(context, listen: false).dataMap = dataMap;
