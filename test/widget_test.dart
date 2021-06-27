@@ -12,9 +12,19 @@ import 'package:flutter_workshop/main.dart';
 import 'package:flutter_workshop/providers/data_provider.dart';
 import 'package:flutter_workshop/views/edit_page.dart';
 import 'package:flutter_workshop/views/main_page.dart';
+import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  setUp(() {
+    WidgetsFlutterBinding.ensureInitialized();
+    PrefService.enableCaching();
+    PrefService.cache = {};
+    PrefService.setStringList(
+        'data_map_keys', ['Flutter', 'React', 'Xamarin', 'Ionic']);
+    PrefService.setStringList('data_map_values', ['5', '3', '2', '2']);
+  });
+
   testWidgets('Test existing widgets', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(ChangeNotifierProvider(
