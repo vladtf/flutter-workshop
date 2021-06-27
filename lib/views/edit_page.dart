@@ -13,9 +13,13 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   Map<String, double> dataMap;
 
+  FocusNode focusNode;
+
   @override
   void initState() {
     super.initState();
+
+    focusNode = FocusNode();
 
     dataMap = Provider.of<DataProvider>(context, listen: false).dataMap;
   }
@@ -84,9 +88,12 @@ class _EditPageState extends State<EditPage> {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: TextFormField(
-                      initialValue: e.key,
-                      readOnly: true,
+                    child: Focus(
+                      child: TextFormField(
+                        initialValue: e.key,
+                        readOnly: true,
+                      ),
+                      onFocusChange: (hasFocus) => focusNode.nextFocus(),
                     ),
                   ),
                   SizedBox(
@@ -108,6 +115,7 @@ class _EditPageState extends State<EditPage> {
                         });
                         print("${e.key} : ${newValue.toString()}");
                       },
+                      onEditingComplete: () => focusNode.nextFocus(),
                     ),
                   )
                 ],
@@ -116,5 +124,13 @@ class _EditPageState extends State<EditPage> {
         .toList();
 
     return rows;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    focusNode.dispose();
+
+    super.dispose();
   }
 }
