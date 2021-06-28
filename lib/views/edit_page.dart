@@ -19,9 +19,12 @@ class _EditPageState extends State<EditPage> {
   void initState() {
     super.initState();
 
-    focusNode = FocusNode();
+    focusNode = FocusScopeNode();
+    // focusNode.attach(context);
 
-    dataMap = Provider.of<DataProvider>(context, listen: false).dataMap;
+    dataMap = Provider
+        .of<DataProvider>(context, listen: false)
+        .dataMap;
   }
 
   @override
@@ -32,7 +35,9 @@ class _EditPageState extends State<EditPage> {
         TextButton(
           child: Text("Save"),
           onPressed: () {
-            Provider.of<DataProvider>(context, listen: false).dataMap = dataMap;
+            Provider
+                .of<DataProvider>(context, listen: false)
+                .dataMap = dataMap;
             Navigator.of(context).pop();
           },
         )
@@ -56,14 +61,20 @@ class _EditPageState extends State<EditPage> {
                       flex: 3,
                       child: Text(
                         "Name",
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline6,
                       ),
                     ),
                     Expanded(
                       flex: 1,
                       child: Text(
                         "Value",
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline6,
                       ),
                     )
                   ],
@@ -78,48 +89,51 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
-  List<Widget> buildTextFields(
-      Map<String, double> dataMap, BuildContext context) {
+  List<Widget> buildTextFields(Map<String, double> dataMap,
+      BuildContext context) {
     var rows = dataMap.entries
-        .map((e) => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Focus(
-                      child: TextFormField(
-                        initialValue: e.key,
-                        readOnly: true,
-                      ),
-                      onFocusChange: (hasFocus) => focusNode.nextFocus(),
-                    ),
+        .map((e) =>
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Focus(
+                  child: TextFormField(
+                    initialValue: e.key,
+                    readOnly: true,
                   ),
-                  SizedBox(
-                    width: 16.0,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: TextFormField(
-                      initialValue: e.value.toString(),
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (value) {
-                        var newValue =
-                            Utils.isNumeric(value) ? double.parse(value) : 0.0;
-                        // double.parse(value) ?? 0.0;
-
-                        setState(() {
-                          dataMap[e.key] = newValue;
-                        });
-                        print("${e.key} : ${newValue.toString()}");
-                      },
-                      onEditingComplete: () => focusNode.nextFocus(),
-                    ),
-                  )
-                ],
+                  onFocusChange: (hasFocus) => focusNode.nextFocus(),
+                ),
               ),
-            ))
+              SizedBox(
+                width: 16.0,
+              ),
+              Expanded(
+                flex: 1,
+                child: TextFormField(
+                  initialValue: e.value.toString(),
+                  keyboardType:
+                  TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (value) {
+                    var newValue =
+                    Utils.isNumeric(value) ? double.parse(value) : 0.0;
+                    // double.parse(value) ?? 0.0;
+
+                    setState(() {
+                      dataMap[e.key] = newValue;
+                    });
+                    print("${e.key} : ${newValue.toString()}");
+                  },
+                  onEditingComplete: () {
+                    focusNode.nextFocus();
+                  },
+                ),
+              )
+            ],
+          ),
+        ))
         .toList();
 
     rows.add(Padding(
