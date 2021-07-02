@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "282272220921",
+    "project_id": "flutter-workshop-vti",
+    "storage_bucket": "flutter-workshop-vti.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282272220921:android:fe85a82fb816eb3ec74428",
+        "android_client_info": {
+          "package_name": "com.flutter_workshop.flutter_workshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "282272220921-sb66abga7ec9s43kmgaojmh641c84ks7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3LjYkyAxluIC6rxlQNwrZJM_BnCK6NNM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "282272220921-sb66abga7ec9s43kmgaojmh641c84ks7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

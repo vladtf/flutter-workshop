@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/providers/data_provider.dart';
+import 'package:flutter_workshop/providers/firebase_data_provider.dart';
 import 'package:flutter_workshop/utils/routes.dart';
 import 'package:preferences/preferences.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,7 @@ void main() async {
   await loadPreferences();
 
   runApp(ChangeNotifierProvider(
-    create: (context) => DataProvider(),
+    create: (context) => FirebaseDataProvider(),
     child: MyApp(),
   ));
 }
@@ -18,10 +19,10 @@ Future loadPreferences() async {
 
   await PrefService.init();
 
-  PrefService.setDefaultValues({
-    'data_map_keys': ['Flutter', 'React', 'Xamarin', 'Ionic'],
-    'data_map_values': ['5', '3', '2', '2'],
-  });
+  // PrefService.setDefaultValues({
+  //   'data_map_keys': ['Flutter', 'React', 'Xamarin', 'Ionic'],
+  //   'data_map_values': ['5', '3', '2', '2'],
+  // });
 }
 
 class MyApp extends StatelessWidget {

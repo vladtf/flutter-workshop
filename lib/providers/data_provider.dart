@@ -9,8 +9,8 @@ class DataProvider with ChangeNotifier {
     var keys = PrefService.get('data_map_keys');
     var values = PrefService.get('data_map_values');
 
-    _dataMap = Map<String, double>.from(keys.asMap().map(
-        (index, key) => MapEntry(key, double.tryParse(values[index] ?? 0))));
+    _dataMap = Map<String, double>.from(keys.asMap().map((index, key) =>
+        MapEntry(key, double.tryParse(values[index] ?? 0 as String))));
   }
 
   Map<String, double> get dataMap => _dataMap;

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_workshop/providers/data_provider.dart';
+import 'package:flutter_workshop/providers/firebase_data_provider.dart';
 import 'package:flutter_workshop/utils/utils.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +20,9 @@ class _EditPageState extends State<EditPage> {
   void initState() {
     super.initState();
 
-    focusNode = FocusScopeNode();
-    // focusNode.attach(context);
+    focusNode = FocusNode();
 
-    dataMap = Provider
-        .of<DataProvider>(context, listen: false)
-        .dataMap;
+    dataMap = Provider.of<FirebaseDataProvider>(context, listen: false).dataMap;
   }
 
   @override
@@ -35,9 +33,7 @@ class _EditPageState extends State<EditPage> {
         TextButton(
           child: Text("Save"),
           onPressed: () {
-            Provider
-                .of<DataProvider>(context, listen: false)
-                .dataMap = dataMap;
+            Provider.of<FirebaseDataProvider>(context, listen: false).dataMap = dataMap;
             Navigator.of(context).pop();
           },
         )
@@ -45,95 +41,90 @@ class _EditPageState extends State<EditPage> {
     );
     return Scaffold(
       appBar: appBar,
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: ListView(children: [
-          Card(
-            child: PieChart(dataMap: dataMap),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        "Name",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline6,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Value",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .headline6,
-                      ),
-                    )
-                  ],
+      body: (dataMap == null)
+          ? Center(child: Text('No data to edit'))
+          : Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ListView(children: [
+                Card(
+                  child: PieChart(dataMap: dataMap),
                 ),
-              ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Name",
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "Value",
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                Column(children: buildTextFields(dataMap, context))
+              ]),
             ),
-          ),
-          Divider(),
-          Column(children: buildTextFields(dataMap, context))
-        ]),
-      ),
     );
   }
 
-  List<Widget> buildTextFields(Map<String, double> dataMap,
-      BuildContext context) {
+  List<Widget> buildTextFields(
+      Map<String, double> dataMap, BuildContext context) {
     var rows = dataMap.entries
-        .map((e) =>
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Focus(
-                  child: TextFormField(
-                    initialValue: e.key,
-                    readOnly: true,
+        .map((e) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Focus(
+                      child: TextFormField(
+                        initialValue: e.key,
+                        readOnly: true,
+                      ),
+                      // onFocusChange: (hasFocus) => focusNode.nextFocus(),
+                    ),
                   ),
-                  onFocusChange: (hasFocus) => focusNode.nextFocus(),
-                ),
-              ),
-              SizedBox(
-                width: 16.0,
-              ),
-              Expanded(
-                flex: 1,
-                child: TextFormField(
-                  initialValue: e.value.toString(),
-                  keyboardType:
-                  TextInputType.numberWithOptions(decimal: true),
-                  onChanged: (value) {
-                    var newValue =
-                    Utils.isNumeric(value) ? double.parse(value) : 0.0;
-                    // double.parse(value) ?? 0.0;
+                  SizedBox(
+                    width: 16.0,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: TextFormField(
+                      initialValue: e.value.toString(),
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      onChanged: (value) {
+                        var newValue =
+                            Utils.isNumeric(value) ? double.parse(value) : 0.0;
+                        // double.parse(value) ?? 0.0;
 
-                    setState(() {
-                      dataMap[e.key] = newValue;
-                    });
-                    print("${e.key} : ${newValue.toString()}");
-                  },
-                  onEditingComplete: () {
-                    focusNode.nextFocus();
-                  },
-                ),
-              )
-            ],
-          ),
-        ))
+                        setState(() {
+                          dataMap[e.key] = newValue;
+                        });
+                        print("${e.key} : ${newValue.toString()}");
+                      },
+                      onEditingComplete: () {
+                        // focusNode.nextFocus();
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ))
         .toList();
 
     rows.add(Padding(
@@ -157,7 +148,10 @@ class _EditPageState extends State<EditPage> {
             flex: 1,
             child: TextFormField(
               initialValue: dataMap.values
-                  .fold(0, (previousValue, element) => previousValue + element)
+                  .fold(
+                      0,
+                      (dynamic previousValue, element) =>
+                          previousValue + element)
                   .toString(),
               readOnly: true,
             ),
